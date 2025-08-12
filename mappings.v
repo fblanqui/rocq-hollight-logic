@@ -74,7 +74,7 @@ Equations? unify (c :list (N*term) * list (term * term)) :
       | left _ H' => unify (env , zip l l' ++ eqs)}}.
 Proof with f_equal.
   1,2,4,5 : right ; repeat split ; auto ; try breakgoal.
-  by move:H' => [-> H'] ; left ; do 4 eexists ; rewrite -lengthN_eqE ; eauto.
+  by move:H' ; rewrite lengthN_eqE => [[-> H']] ; breakgoal.
   left. unfold MEASURE. unfold MLEFT. simpl.
   match goal with |- _ < card (setU (setU ?sn ?e1)
     (setU (setU ?e3 ?e2) (setU ?e4 ?e5))) - card ?e5 =>
@@ -311,8 +311,7 @@ Inductive resproof (hyps : set (set form)) : set form -> Prop :=
 Lemma resproof_def : resproof = (fun hyps' : (form -> Prop) -> Prop => fun a : form -> Prop => forall resproof' : (form -> Prop) -> Prop, (forall a' : form -> Prop, ((@IN (form -> Prop) a' hyps') \/ (exists cl1 : form -> Prop, exists cl2 : form -> Prop, exists cl2' : form -> Prop, exists ps1 : form -> Prop, exists ps2 : form -> Prop, exists i : N -> term, (a' = (@IMAGE form form (formsubst i) (@setU form (@setD form cl1 ps1) (@setD form cl2' ps2)))) /\ ((resproof' cl1) /\ ((resproof' cl2) /\ (((@IMAGE form form (formsubst (rename cl2 (FVS cl1))) cl2) = cl2') /\ ((@subset form ps1 cl1) /\ ((@subset form ps2 cl2') /\ ((~ (ps1 = (@set0 form))) /\ ((~ (ps2 = (@set0 form))) /\ ((exists i' : N -> term, Unifies i' (@setU form ps1 (@GSPEC form (fun GEN_PVAR_533 : form => exists p : form, @SETSPEC form GEN_PVAR_533 (@IN form p ps2) (FNot p))))) /\ ((mgu (@setU form ps1 (@GSPEC form (fun GEN_PVAR_534 : form => exists p : form, @SETSPEC form GEN_PVAR_534 (@IN form p ps2) (FNot p))))) = i))))))))))) -> resproof' a') -> resproof' a).
 Proof.
   ssimpl ; ind_align.
-  - right. do 6 eexists ; repeat split ; eauto.
-    all : by rewrite -[fun x => exists p, [set x' | ps2 p /\ x = x'] (FNot p)]/(GSPEC(
+  - breakgoal by rewrite -[fun x => exists p, [set x' | ps2 p /\ x = x'] (FNot p)]/(GSPEC(
       fun x => exists p, [set x' | (fun p' ps2' => ps2' p' ) p ps2 /\ x = x'] (FNot p)))
     -IN_def SPEC_IMAGE.
   - apply resproof_rm_opposable with (cl2 := x1) ; auto.
@@ -517,7 +516,7 @@ Inductive npresproof (hyps : set (set form)) : set form -> N -> Prop :=
 Lemma npresproof_def : npresproof = (fun hyps' : (form -> Prop) -> Prop => fun a0 : form -> Prop => fun a1 : N => forall npresproof' : (form -> Prop) -> N -> Prop, (forall a0' : form -> Prop, forall a1' : N, (((a1' = (NUMERAL (BIT1 N0))) /\ (@IN (form -> Prop) a0' hyps')) \/ (exists p : form, exists n1 : N, exists n2 : N, exists cl1 : form -> Prop, exists cl2 : form -> Prop, (a0' = (resolve p cl1 cl2)) /\ ((a1' = (N.add n1 (N.add n2 (NUMERAL (BIT1 N0))))) /\ ((npresproof' cl1 n1) /\ ((npresproof' cl2 n2) /\ ((@IN form p cl1) /\ (@IN form (FNot p) cl2))))))) -> npresproof' a0' a1') -> npresproof' a0 a1).
 Proof.
   ssimpl ; ind_align.
-  by right ; do 5 eexists ; repeat split ; eauto ; rewrite N.add_1_r N.add_succ_r.
+  breakgoal by rewrite N.add_1_r N.add_succ_r.
   by rewrite N.add_1_r N.add_succ_r ; apply npresproof_resolve.
 Qed.
 
@@ -570,13 +569,12 @@ Inductive sresproof (hyps sos : set (set form)) : set form -> Prop :=
 Lemma sresproof_def : sresproof = (fun hyps' : (form -> Prop) -> Prop => fun sos : (form -> Prop) -> Prop => fun a : form -> Prop => forall sresproof' : (form -> Prop) -> Prop, (forall a' : form -> Prop, (((@IN (form -> Prop) a' hyps') /\ ((@IN (form -> Prop) a' sos) /\ (~ (tautologous a')))) \/ (exists cl1 : form -> Prop, exists cl2 : form -> Prop, exists cl2' : form -> Prop, exists ps1 : form -> Prop, exists ps2 : form -> Prop, exists i : N -> term, (a' = (@IMAGE form form (formsubst i) (@setU form (@setD form cl1 ps1) (@setD form cl2' ps2)))) /\ ((sresproof' cl1) /\ (((sresproof' cl2) \/ (@IN (form -> Prop) cl2 hyps')) /\ (((@IMAGE form form (formsubst (rename cl2 (FVS cl1))) cl2) = cl2') /\ ((@subset form ps1 cl1) /\ ((@subset form ps2 cl2') /\ ((~ (ps1 = (@set0 form))) /\ ((~ (ps2 = (@set0 form))) /\ ((exists i' : N -> term, Unifies i' (@setU form ps1 (@GSPEC form (fun GEN_PVAR_589 : form => exists p : form, @SETSPEC form GEN_PVAR_589 (@IN form p ps2) (FNot p))))) /\ (((mgu (@setU form ps1 (@GSPEC form (fun GEN_PVAR_590 : form => exists p : form, @SETSPEC form GEN_PVAR_590 (@IN form p ps2) (FNot p))))) = i) /\ (~ (tautologous (@IMAGE form form (formsubst i) (@setU form (@setD form cl1 ps1) (@setD form cl2' ps2)))))))))))))))) -> sresproof' a') -> sresproof' a).
 Proof.
   ssimpl ; ind_align.
-  1,2 : right ; do 6 eexists ; repeat split ; eauto.
-  1-4 : by rewrite -[fun x => exists p, [set x' | ps2 p /\ x = x'] (FNot p)]/(GSPEC(
+  1,2 : by right ; destruct H6 ; repeat eexists ; eauto ; by rewrite -[fun x => exists p, [set x' | ps2 p /\ x = x'] (FNot p)]/(GSPEC(
       fun x => exists p, [set x' | (fun p' ps2' => ps2' p' ) p ps2 /\ x = x'] (FNot p)))
-    -IN_def SPEC_IMAGE.
+    -IN_def SPEC_IMAGE ; eauto.
   1,2 : rewrite -[fun x => exists p, [set x' | x5 p /\ x = x'] (FNot p)]/(GSPEC(
       fun x => exists p, [set x' | (fun p' ps2' => ps2' p' ) p x5 /\ x = x'] (FNot p)))
-    -IN_def SPEC_IMAGE in H7,H8 ; eauto using sresproof.
+    -IN_def SPEC_IMAGE in H7,H8 ; econstructor ; by eauto.
 Qed.
 
 (*****************************************************************************)
@@ -650,13 +648,12 @@ Inductive posresproof (hyps : set (set form)) : set form -> Prop :=
 Lemma posresproof_def : posresproof = (fun hyps' : (form -> Prop) -> Prop => fun a : form -> Prop => forall posresproof' : (form -> Prop) -> Prop, (forall a' : form -> Prop, ((@IN (form -> Prop) a' hyps') \/ (exists cl1 : form -> Prop, exists cl2 : form -> Prop, exists cl2' : form -> Prop, exists ps1 : form -> Prop, exists ps2 : form -> Prop, exists i : N -> term, (a' = (@IMAGE form form (formsubst i) (@setU form (@setD form cl1 ps1) (@setD form cl2' ps2)))) /\ ((posresproof' cl1) /\ ((posresproof' cl2) /\ (((allpositive cl1) \/ (allpositive cl2)) /\ (((@IMAGE form form (formsubst (rename cl2 (FVS cl1))) cl2) = cl2') /\ ((@subset form ps1 cl1) /\ ((@subset form ps2 cl2') /\ ((~ (ps1 = (@set0 form))) /\ ((~ (ps2 = (@set0 form))) /\ ((exists i' : N -> term, Unifies i' (@setU form ps1 (@GSPEC form (fun GEN_PVAR_622 : form => exists p : form, @SETSPEC form GEN_PVAR_622 (@IN form p ps2) (FNot p))))) /\ ((mgu (@setU form ps1 (@GSPEC form (fun GEN_PVAR_623 : form => exists p : form, @SETSPEC form GEN_PVAR_623 (@IN form p ps2) (FNot p))))) = i)))))))))))) -> posresproof' a') -> posresproof' a).
 Proof.
   ssimpl ; ind_align.
-  1,2 : right ; do 6 eexists ; repeat split ; eauto.
-  1-4 : by rewrite -[fun x => exists p, [set x' | ps2 p /\ x = x'] (FNot p)]/(GSPEC(
+  1,2 : right ; full_destruct ; repeat eexists ; eauto ; by rewrite -[fun x => exists p, [set x' | ps2 p /\ x = x'] (FNot p)]/(GSPEC(
       fun x => exists p, [set x' | (fun p' ps2' => ps2' p' ) p ps2 /\ x = x'] (FNot p)))
-    -IN_def SPEC_IMAGE.
+    -IN_def SPEC_IMAGE ; eauto.
   1,2 : rewrite -[fun x => exists p, [set x' | x4 p /\ x = x'] (FNot p)]/(GSPEC(
       fun x => exists p, [set x' | (fun p' ps2' => ps2' p' ) p x4 /\ x = x'] (FNot p)))
-    -IN_def SPEC_IMAGE in H8,H9 ; econstructor ; breakgoal.
+    -IN_def SPEC_IMAGE in H8,H9 ; econstructor ; by eauto.
 Qed.
 
 Inductive semresproof {A : Type'} (M : Structure A) 
@@ -682,13 +679,12 @@ Inductive semresproof {A : Type'} (M : Structure A)
 Lemma semresproof_def {A : Type'} : (@semresproof A) = (fun M : prod (A -> Prop) (prod (N -> (list A) -> A) (N -> (list A) -> Prop)) => fun hyps' : (form -> Prop) -> Prop => fun a : form -> Prop => forall semresproof' : (form -> Prop) -> Prop, (forall a' : form -> Prop, ((@IN (form -> Prop) a' hyps') \/ (exists cl1 : form -> Prop, exists cl2 : form -> Prop, exists cl2' : form -> Prop, exists ps1 : form -> Prop, exists ps2 : form -> Prop, exists i : N -> term, (a' = (@IMAGE form form (formsubst i) (@setU form (@setD form cl1 ps1) (@setD form cl2' ps2)))) /\ ((semresproof' cl1) /\ ((semresproof' cl2) /\ (((~ (forall v : N -> A, @holds A M v (interp cl1))) \/ (~ (forall v : N -> A, @holds A M v (interp cl2)))) /\ (((@IMAGE form form (formsubst (rename cl2 (FVS cl1))) cl2) = cl2') /\ ((@subset form ps1 cl1) /\ ((@subset form ps2 cl2') /\ ((~ (ps1 = (@set0 form))) /\ ((~ (ps2 = (@set0 form))) /\ ((exists i' : N -> term, Unifies i' (@setU form ps1 (@GSPEC form (fun GEN_PVAR_629 : form => exists p : form, @SETSPEC form GEN_PVAR_629 (@IN form p ps2) (FNot p))))) /\ ((mgu (@setU form ps1 (@GSPEC form (fun GEN_PVAR_630 : form => exists p : form, @SETSPEC form GEN_PVAR_630 (@IN form p ps2) (FNot p))))) = i)))))))))))) -> semresproof' a') -> semresproof' a).
 Proof.
   ext 2 => M hyps ; ssimpl ; ind_align.
-  1,2 : right ; do 6 eexists ; repeat split ; eauto.
-  1-4 : by rewrite -[fun x => exists p, [set x' | ps2 p /\ x = x'] (FNot p)]/(GSPEC(
+  1,2 : right ; full_destruct ; repeat eexists ; eauto ; by rewrite -[fun x => exists p, [set x' | ps2 p /\ x = x'] (FNot p)]/(GSPEC(
       fun x => exists p, [set x' | (fun p' ps2' => ps2' p' ) p ps2 /\ x = x'] (FNot p)))
-    -IN_def SPEC_IMAGE.
+    -IN_def SPEC_IMAGE ; eauto.
   1,2 : rewrite -[fun x => exists p, [set x' | x3 p /\ x = x'] (FNot p)]/(GSPEC(
       fun x => exists p, [set x' | (fun p' ps2' => ps2' p' ) p x3 /\ x = x'] (FNot p)))
-    -IN_def SPEC_IMAGE in H8,H9 ; econstructor ; breakgoal.
+    -IN_def SPEC_IMAGE in H8,H9 ; econstructor ; by eauto.
 Qed.
 
 Inductive semresproof2 {A : Type'} (M : Structure A) 
@@ -716,13 +712,12 @@ Inductive semresproof2 {A : Type'} (M : Structure A)
 Lemma semresproof2_def {A : Type'} : (@semresproof2 A) = (fun M : prod (A -> Prop) (prod (N -> (list A) -> A) (N -> (list A) -> Prop)) => fun hyps' : (form -> Prop) -> Prop => fun a : form -> Prop => forall semresproof2' : (form -> Prop) -> Prop, (forall a' : form -> Prop, ((@IN (form -> Prop) a' hyps') \/ (exists cl1 : form -> Prop, exists cl2 : form -> Prop, exists cl2' : form -> Prop, exists ps1 : form -> Prop, exists ps2 : form -> Prop, exists i : N -> term, (a' = (@IMAGE form form (formsubst i) (@setU form (@setD form cl1 ps1) (@setD form cl2' ps2)))) /\ ((semresproof2' cl1) /\ ((semresproof2' cl2) /\ (((~ (forall v : N -> A, (@valuation A M v) -> @holds A M v (interp cl1))) \/ (~ (forall v : N -> A, (@valuation A M v) -> @holds A M v (interp cl2)))) /\ (((@IMAGE form form (formsubst (rename cl2 (FVS cl1))) cl2) = cl2') /\ ((@subset form ps1 cl1) /\ ((@subset form ps2 cl2') /\ ((~ (ps1 = (@set0 form))) /\ ((~ (ps2 = (@set0 form))) /\ ((exists i' : N -> term, Unifies i' (@setU form ps1 (@GSPEC form (fun GEN_PVAR_636 : form => exists p : form, @SETSPEC form GEN_PVAR_636 (@IN form p ps2) (FNot p))))) /\ ((mgu (@setU form ps1 (@GSPEC form (fun GEN_PVAR_637 : form => exists p : form, @SETSPEC form GEN_PVAR_637 (@IN form p ps2) (FNot p))))) = i)))))))))))) -> semresproof2' a') -> semresproof2' a).
 Proof.
   ext 2 => M hyps ; ssimpl ; ind_align.
-  1,2 : right ; do 6 eexists ; repeat split ; eauto.
-  1-4 : by rewrite -[fun x => exists p, [set x' | ps2 p /\ x = x'] (FNot p)]/(GSPEC(
+  1,2 : right ; full_destruct ; repeat eexists ; eauto ; by rewrite -[fun x => exists p, [set x' | ps2 p /\ x = x'] (FNot p)]/(GSPEC(
       fun x => exists p, [set x' | (fun p' ps2' => ps2' p' ) p ps2 /\ x = x'] (FNot p)))
-    -IN_def SPEC_IMAGE.
+    -IN_def SPEC_IMAGE ; eauto.
   1,2 : rewrite -[fun x => exists p, [set x' | x3 p /\ x = x'] (FNot p)]/(GSPEC(
       fun x => exists p, [set x' | (fun p' ps2' => ps2' p' ) p x3 /\ x = x'] (FNot p)))
-    -IN_def SPEC_IMAGE in H8,H9 ; econstructor ; breakgoal.
+    -IN_def SPEC_IMAGE in H8,H9 ; econstructor ; by eauto.
 Qed.
 
 (*****************************************************************************)
@@ -1353,7 +1348,7 @@ Fixpoint lpo_ind P H0 H1 H2
 Lemma lt2_def : lpo = (fun a0 : term => fun a1 : term => forall lt2' : term -> term -> Prop, (forall a0' : term, forall a1' : term, ((exists x : N, (a0' = (V x)) /\ ((@IN N x (free_variables_term a1')) /\ (~ (a1' = (V x))))) \/ ((exists fs : N, exists sargs : list term, exists ft : N, exists targs : list term, exists si : term, (a0' = (Fn ft targs)) /\ ((a1' = (Fn fs sargs)) /\ ((@List.In term si sargs) /\ ((lt2' (Fn ft targs) si) \/ (si = (Fn ft targs)))))) \/ ((exists fs : N, exists ft : N, exists sargs : list term, exists targs : list term, (a0' = (Fn ft targs)) /\ ((a1' = (Fn fs sargs)) /\ (((N.gt fs ft) \/ ((fs = ft) /\ (N.gt (@lengthN term sargs) (@lengthN term targs)))) /\ (@List.Forall term (fun ti : term => lt2' ti (Fn fs sargs)) targs)))) \/ (exists f : N, exists sargs : list term, exists targs : list term, (a0' = (Fn f targs)) /\ ((a1' = (Fn f sargs)) /\ ((@List.Forall term (fun ti : term => lt2' ti (Fn f sargs)) targs) /\ (@LEX term lt2' targs sargs))))))) -> lt2' a0' a1') -> lt2' a0 a1).
 Proof.
   ssimpl ; ind_align.
-  - by do 2 right ; left ; exist n' n l' l ; rewrite -lengthN_gtE.
+  - breakgoal by rewrite -lengthN_gtE.
   - by subst ; apply lpo_Fn_smaller => // ; rewrite lengthN_gtE ; auto.
 Qed.
 
