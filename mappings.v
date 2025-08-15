@@ -161,10 +161,19 @@ Proof. partial_align (is_None _211969). Qed.
 
 Definition unifier l := fold_right valmod V (SOLVE nil l).
 
+Lemma unifier_def : unifier = (fun _274434 : list (prod N term) => @LET (list (prod N term)) (N -> term) (fun sol : list (prod N term) => @LET_END (N -> term) (@fold_right_with_perm_args (prod N term) (N -> term) (@valmod term N) sol V)) (SOLVE (@nil (prod N term)) _274434)).
+Proof erefl.
+
 Definition Unifies subst E := forall f f' : form,
   IN f E /\ IN f' E -> formsubst subst f = formsubst subst f'.
 
+Lemma Unifies_def : Unifies = (fun _275904 : N -> term => fun _275905 : form -> Prop => all (fun p : form => all (fun q : form => ((@IN form p _275905) /\ (@IN form q _275905)) -> eq (formsubst _275904 p) (formsubst _275904 q)))).
+Proof erefl.
+
 Definition mgu : (form -> Prop) -> N -> term := fun _276282 : form -> Prop => @ε (N -> term) (fun i : N -> term => (Unifies i _276282) /\ (forall j : N -> term, (Unifies j _276282) -> forall p : form, (qfree p) -> (formsubst j p) = (formsubst j (formsubst i p)))).
+
+Lemma mgu_def : mgu = (fun _276282 : form -> Prop => @ε (N -> term) (fun i : N -> term => (Unifies i _276282) /\ (all (fun j : N -> term => (Unifies j _276282) -> all (fun p : form => (qfree p) -> eq (formsubst j p) (formsubst j (formsubst i p))))))).
+Proof erefl.
 
 Definition o {A B C : Type'} : (B -> C) -> (A -> B) -> A -> C := fun f : B -> C => fun g : A -> B => fun x : A => f (g x).
 
@@ -172,6 +181,9 @@ Definition ismgu E subst :=
   Unifies subst E /\
   (forall subst' : N -> term, Unifies subst' E ->
   exists subst'' : N -> term, termsubst subst' = (fun x => termsubst subst'' (termsubst subst x))).
+
+Lemma ismgu_def : ismgu = (fun _276290 : form -> Prop => fun _276291 : N -> term => (Unifies _276291 _276290) /\ (all (fun j : N -> term => (Unifies j _276290) -> ex (fun k : N -> term => eq (termsubst j) (@o term term term (termsubst k) (termsubst _276291)))))).
+Proof erefl.
 
 Definition renaming (subst : N -> term) :=
   exists subst' : N -> term, forall t,
@@ -251,6 +263,9 @@ Qed.
 
 Definition resolve f cl cl' := cl `\ f `|` cl' `\ (FNot f).
 
+Lemma resolve_def : resolve = (fun _276622 : form => fun _276623 : form -> Prop => fun _276624 : form -> Prop => @setU form (@DELETE form _276623 _276622) (@DELETE form _276624 (FNot _276622))).
+Proof erefl.
+
 Inductive presproof (hyps : set (set form)) : set form -> Prop :=
   | presproof_assumption : forall cl, hyps cl -> presproof hyps cl
   | presproof_resolve : forall f cl cl', presproof hyps cl ->
@@ -262,7 +277,13 @@ Proof. ssimpl ; ind_align. Qed.
 
 Definition interp cl := fold_right FOr FFalse (list_of_set cl).
 
+Lemma interp_def : interp = (fun _276649 : form -> Prop => @fold_right_with_perm_args form form FOr (@list_of_set form _276649) FFalse).
+Proof erefl.
+
 Definition instance_of cl cl' := (exists subst, cl = formsubst subst @` cl').
+
+Lemma instance_of_def : instance_of = (fun _282937 : form -> Prop => fun _282938 : form -> Prop => ex (fun i : N -> term => eq _282937 (@IMAGE form form (formsubst i) _282938))).
+Proof erefl.
 
 Definition FVS cl := UNIONS (free_variables @` cl).
 
@@ -270,6 +291,9 @@ Lemma FVS_def : FVS = (fun _282949 : form -> Prop => @UNIONS N (@GSPEC (N -> Pro
 Proof. by extall ; ssimpl. Qed.
 
 Definition rename : (form -> Prop) -> (N -> Prop) -> N -> term := @ε ((prod N (prod N (prod N (prod N (prod N N))))) -> (form -> Prop) -> (N -> Prop) -> N -> term) (fun i : (prod N (prod N (prod N (prod N (prod N N))))) -> (form -> Prop) -> (N -> Prop) -> N -> term => forall _285948 : prod N (prod N (prod N (prod N (prod N N)))), forall cl : form -> Prop, forall s : N -> Prop, ((@finite_set N s) /\ (clause cl)) -> (renaming (i _285948 cl s)) /\ ((@setI N (FVS (@IMAGE form form (formsubst (i _285948 cl s)) cl)) s) = (@set0 N))) (@pair N (prod N (prod N (prod N (prod N N)))) (NUMERAL (BIT0 (BIT1 (BIT0 (BIT0 (BIT1 (BIT1 (BIT1 N0)))))))) (@pair N (prod N (prod N (prod N N))) (NUMERAL (BIT1 (BIT0 (BIT1 (BIT0 (BIT0 (BIT1 (BIT1 N0)))))))) (@pair N (prod N (prod N N)) (NUMERAL (BIT0 (BIT1 (BIT1 (BIT1 (BIT0 (BIT1 (BIT1 N0)))))))) (@pair N (prod N N) (NUMERAL (BIT1 (BIT0 (BIT0 (BIT0 (BIT0 (BIT1 (BIT1 N0)))))))) (@pair N N (NUMERAL (BIT1 (BIT0 (BIT1 (BIT1 (BIT0 (BIT1 (BIT1 N0)))))))) (NUMERAL (BIT1 (BIT0 (BIT1 (BIT0 (BIT0 (BIT1 (BIT1 N0))))))))))))).
+
+Lemma rename_def : rename = (@ε ((prod N (prod N (prod N (prod N (prod N N))))) -> (form -> Prop) -> (N -> Prop) -> N -> term) (fun i : (prod N (prod N (prod N (prod N (prod N N))))) -> (form -> Prop) -> (N -> Prop) -> N -> term => all (fun _285948 : prod N (prod N (prod N (prod N (prod N N)))) => all (fun cl : form -> Prop => all (fun s : N -> Prop => ((@finite_set N s) /\ (clause cl)) -> (renaming (i _285948 cl s)) /\ (eq (@setI N (FVS (@IMAGE form form (formsubst (i _285948 cl s)) cl)) s) (@set0 N)))))) (@pair N (prod N (prod N (prod N (prod N N)))) (NUMERAL (BIT0 (BIT1 (BIT0 (BIT0 (BIT1 (BIT1 (BIT1 N0)))))))) (@pair N (prod N (prod N (prod N N))) (NUMERAL (BIT1 (BIT0 (BIT1 (BIT0 (BIT0 (BIT1 (BIT1 N0)))))))) (@pair N (prod N (prod N N)) (NUMERAL (BIT0 (BIT1 (BIT1 (BIT1 (BIT0 (BIT1 (BIT1 N0)))))))) (@pair N (prod N N) (NUMERAL (BIT1 (BIT0 (BIT0 (BIT0 (BIT0 (BIT1 (BIT1 N0)))))))) (@pair N N (NUMERAL (BIT1 (BIT0 (BIT1 (BIT1 (BIT0 (BIT1 (BIT1 N0)))))))) (NUMERAL (BIT1 (BIT0 (BIT1 (BIT0 (BIT0 (BIT1 (BIT1 N0)))))))))))))).
+Proof erefl.
 
 Inductive resproof (hyps : set (set form)) : set form -> Prop :=
   | resproof_assumption : forall cl, hyps cl -> resproof hyps cl
@@ -326,6 +350,9 @@ Proof. by ssimpl. Qed.
 
 Definition subsumes cl cl' := exists subst, formsubst subst @` cl `<=` cl'.
 
+Lemma subsumes_def : subsumes = (fun _290204 : form -> Prop => fun _290205 : form -> Prop => ex (fun i : N -> term => @subset form (@IMAGE form form (formsubst i) _290204) _290205)).
+Proof erefl.
+
 Definition SUBSUMES (s s' : set (set form)) := forall cl', s' cl' -> exists cl, s cl /\ subsumes cl cl'.
 
 Lemma SUBSUMES_def : SUBSUMES = (fun _290276 : (form -> Prop) -> Prop => fun _290277 : (form -> Prop) -> Prop => forall cl' : form -> Prop, (@IN (form -> Prop) cl' _290277) -> exists cl : form -> Prop, (@IN (form -> Prop) cl _290276) /\ (subsumes cl cl')).
@@ -361,7 +388,13 @@ Definition incorporate cl cl' l :=
   if tautologous cl' \/ Exists (fun cl0 : form -> Prop => subsumes cl0 cl') (cl :: l)
     then l else replace cl' l.
 
+Lemma incorporate_def : incorporate =(fun _316633 : form -> Prop => fun _316634 : form -> Prop => fun _316635 : list (form -> Prop) => @COND (list (form -> Prop)) ((tautologous _316634) \/ (@List.Exists (form -> Prop) (fun c : form -> Prop => subsumes c _316634) (@cons (form -> Prop) _316633 _316635))) _316635 (replace _316634 _316635)).
+Proof erefl.
+
 Definition insert {A : Type'} (a : A) l := if In a l then l else a :: l.
+
+Lemma insert_def {_218810 : Type'} :  (@insert _218810) = (fun _316826 : _218810 => fun _316827 : list _218810 => @COND (list _218810) (@List.In _218810 _316826 _316827) _316827 (@cons _218810 _316826 _316827)).
+Proof erefl.
 
 Definition step c :=
   match snd c with
@@ -387,6 +420,11 @@ Qed.
 
 Definition Used init n := set_of_list (fst (giveN n init)).
 Definition Unused init n := set_of_list (snd (giveN n init)).
+
+Lemma Used_def : Used = (fun _316851 : prod (list (form -> Prop)) (list (form -> Prop)) => fun _316852 : N => @set_of_list (form -> Prop) (@fst (list (form -> Prop)) (list (form -> Prop)) (giveN _316852 _316851))).
+Proof erefl.
+Lemma Unused_def : Unused = (fun _316863 : prod (list (form -> Prop)) (list (form -> Prop)) => fun _316864 : N => @set_of_list (form -> Prop) (@snd (list (form -> Prop)) (list (form -> Prop)) (giveN _316864 _316863))).
+Proof erefl.
 
 Fixpoint Subnat init n :=
   match n with
@@ -417,6 +455,9 @@ Proof.
 Qed.
 
 Definition level init n := Sub init (break init n).
+
+Lemma level_def : level = (fun _328647 : prod (list (form -> Prop)) (list (form -> Prop)) => fun _328648 : N => Sub _328647 (break _328647 _328648)).
+Proof erefl.
 
 (*****************************************************************************)
 (* Logic/linear.ml *)
@@ -771,6 +812,9 @@ Qed.
 
 Definition level_sem M init n := Sub_SEM M init (break_sem M init n).
 
+Lemma level_sem_def : level_sem = (fun _544385 : prod (N -> Prop) (prod (N -> (list N) -> N) (N -> (list N) -> Prop)) => fun _544386 : prod (list (form -> Prop)) (list (form -> Prop)) => fun _544387 : N => Sub_SEM _544385 _544386 (break_sem _544385 _544386 _544387)).
+Proof erefl.
+
 (*****************************************************************************)
 (* Logic/prolog.ml *)
 (*****************************************************************************)
@@ -800,10 +844,16 @@ Qed.
 
 Definition falsify f cl := if definite cl then cl else f |` cl.
 
+Lemma falsify_def : falsify = (fun _545159 : form => fun _545160 : form -> Prop => @COND (form -> Prop) (definite _545160) _545160 (@INSERT form _545159 _545160)).
+Proof erefl.
+
 Definition minmodel E := (herbase (functions E),
   (Fn,
   fun n l => forall M, Dom M = herbase (functions E) /\ 
     Fun M = Fn /\ satisfies M E -> Pred M n l)).
+
+Lemma minmodel_def : minmodel = (fun _546187 : form -> Prop => @pair (term -> Prop) (prod (N -> (list term) -> term) (N -> (list term) -> Prop)) (herbase (functions _546187)) (@pair (N -> (list term) -> term) (N -> (list term) -> Prop) Fn (fun p : N => fun zs : list term => forall H : prod (term -> Prop) (prod (N -> (list term) -> term) (N -> (list term) -> Prop)), (((@Dom term H) = (herbase (functions _546187))) /\ (((@Fun term H) = Fn) /\ (@satisfies term H _546187))) -> @Pred term H p zs))).
+Proof erefl.
 
 Definition breakhorn cl := if definite cl
   then let p := ε (fun p : form => cl p /\ positive p) in
@@ -815,6 +865,11 @@ Proof. by ssimpl. Qed.
 
 Definition hypotheses cl := fst (breakhorn cl).
 Definition conclusion cl := snd (breakhorn cl).
+
+Lemma hypotheses_def : hypotheses = (fun _546250 : form -> Prop => @fst (list form) form (breakhorn _546250)).
+Proof erefl.
+Lemma conclusion_def : conclusion = (fun _546250 : form -> Prop => @snd (list form) form (breakhorn _546250)).
+Proof erefl.
 
 Unset Elimination Schemes.
 Inductive gbackchain s : N -> form -> Prop :=
@@ -845,6 +900,9 @@ Definition iminmodel E :=
      fun n l => forall M, Dom M = terms (functions E) /\ Fun M = Fn /\ 
      (forall v f, IN f E /\ valuation M v -> holds M v f) ->
      Pred M n l)).
+
+Lemma iminmodel_def : iminmodel = (fun _549309 : form -> Prop => @pair (term -> Prop) (prod (N -> (list term) -> term) (N -> (list term) -> Prop)) (terms (functions _549309)) (@pair (N -> (list term) -> term) (N -> (list term) -> Prop) Fn (fun p : N => fun zs : list term => forall C : prod (term -> Prop) (prod (N -> (list term) -> term) (N -> (list term) -> Prop)), (((@Dom term C) = (terms (functions _549309))) /\ (((@Fun term C) = Fn) /\ (forall v : N -> term, forall p' : form, ((@IN form p' _549309) /\ (@valuation term C v)) -> @holds term C v p')) -> @Pred term C p zs)))).
+Proof erefl.
 
 Inductive ibackchain s : N -> form -> Prop :=
 | ibackchain0 : forall cl v l, s cl ->
@@ -1209,6 +1267,9 @@ Proof. ssimpl ; ind_align. Qed.
 Definition NONWF {A : Type} (R : A -> A -> Prop) (x : A) :=
   exists s, s 0 = x /\ forall n, R (s (N.succ n)) (s n).
 
+Lemma NONWF_def {A : Type'} :  (@NONWF A) = (fun _563585 : A -> A -> Prop => fun _563586 : A => ex (fun s : N -> A => (eq (s (NUMERAL N0)) _563586) /\ (forall n : N, _563585 (s (N.succ n)) (s n)))).
+Proof erefl.
+
 Fixpoint termsize t :=
   match t with
   | V _ => 1
@@ -1243,6 +1304,9 @@ Lemma subterm_def : subterm = (fun a0 : term => fun a1 : term => forall subterm'
 Proof. ind_align. Qed.
 
 Definition psubterm t t' := (subterm t t' /\ t <> t').
+
+Lemma psubterm_def : psubterm = (fun _567009 : term => fun _567010 : term => (subterm _567009 _567010) /\ (~ (eq _567009 _567010))).
+Proof erefl.
 
 Unset Elimination Schemes.
 Inductive lpo : term -> term -> Prop :=
