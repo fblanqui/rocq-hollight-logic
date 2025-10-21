@@ -3,7 +3,7 @@ From mathcomp Require Import finmap boolp classical_sets cardinality.
 From Stdlib Require Import BinNat Reals List.
 From Equations Require Import Equations.
 Require Import HOLLight_Real_With_N.mappings.
-From HOLLight_Logic1 Require Import mappings_coq_hol_light mappings theorems.
+From HOLLight_Logic_fole Require Import mappings theorems.
 
 Set Bullet Behavior "Strict Subproofs".
 

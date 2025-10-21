@@ -19,7 +19,7 @@ dump_simp_option=
 lpfile=mappings.lp
 vfiles=mappings.v
 mkfile=
-require='Stdlib.NArith.BinNat Stdlib.Reals.Reals mathcomp.classical.classical_sets mathcomp.classical.cardinality mathcomp.ssreflect.choice mathcomp.ssreflect.ssrbool MathComp_HOLLight_Real_With_N.mappings HOLLight_Logic_fole'
+require='Stdlib.NArith.BinNat Stdlib.Reals.Reals mathcomp.classical.classical_sets mathcomp.classical.cardinality mathcomp.ssreflect.choice mathcomp.ssreflect.ssrbool MathComp_HOLLight_Real_With_N.mappings HOLLight_Logic_fole.mappings'
 root_path=`awk -F'[":]' '/logpath/{print $3}' opam`
 jobs='-j32'
 
