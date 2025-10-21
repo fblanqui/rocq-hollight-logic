@@ -16,13 +16,13 @@ depends: [
   "coq-mathcomp-classical" {>= "1.8.0"}
   "coq-hol-light-real-with-N" {>= "2.0.0"}
   "coq-fourcolor-reals" {>= "1.4.0"}
-  "coq-hol-light-Logic1"
+  "rocq-hollight-fole" {>= "0.0.0"}
 ]
 build: [make "-j%{jobs}%"]
 install: [make "install"]
 tags: [
-  "logpath:HOLLight_Logic2"
-  "date:2025-08-16"
+  "logpath:HOLLight_Logic"
+  "date:2025-10-21"
   "keyword:HOL-Light"
   "keyword:first order logic"
 ]
