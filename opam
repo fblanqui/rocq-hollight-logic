@@ -17,7 +17,7 @@ depends: [
   "coq-fourcolor-reals" {>= "1.4.0"}
   "rocq-mathcomp-hollight-real-with-N" {>= "0.0.0"}
   "rocq-equations" {>= "1.3.1+9.0"}
-  "rocq-hollight-fole" {>= "0.0.0"}
+  "rocq-hollight-logic-unif" {>= "0.0.0"}
 ]
 build: [make "-j%{jobs}%"]
 install: [make "install"]
