@@ -1,4 +1,4 @@
-LIBNAME=HOLLight_Logic2
+LIBNAME=$(shell awk -F'[":]' '/logpath/{print $$3}' opam)
 
 .SUFFIXES:
 
