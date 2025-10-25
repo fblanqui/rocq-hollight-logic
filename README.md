@@ -4,11 +4,11 @@ Remark: The translated theorems are provided as axioms in order to have a fast R
 
 **Contents**
 
-For an overview of the goals and contents of this library, one can read the README and make.ml files in the [Logic](https://github.com/jrh13/hol-light/blob/master/Logic) library. More precisions are available in John Harrison's publications detailed in the README, as well as in the structure of each file (thanks to proper section naming).
+For an overview of the goals and contents of this library, one can read the files [README](https://github.com/jrh13/hol-light/blob/master/Logic/README) and [make.ml](https://github.com/jrh13/hol-light/blob/master/Logic/make.ml) in the [Logic](https://github.com/jrh13/hol-light/blob/master/Logic) library. More precisions are available in John Harrison's publications detailed in the README, as well as in the structure of each file (thanks to proper section naming).
 
-Some key types and definitions in this library, all available as idomatic Rocq objects (note that some are defined in the rocq-hollight-logic-unif library):
-- two (inductive) types for first order terms and formulae, over a fixed countable signature (functions and predicates labelled by N for all possible arities) or subsets of this signature, 
-- Basic definitions including free/bound variables, term interpretations and formula realization in a model, semantic implication and equivalence, substitution in terms and formulae, and more.
+Some key types and definitions in this library, all available as idomatic Rocq objects (note that some are defined in the [rocq-hollight-logic-unif](https://github.com/Deducteam/rocq-hollight-logic-unif) library):
+- Inductive types for first-order terms and formulae over a fixed countable signature (functions and predicates labelled by N for all possible arities) or subsets of this signature
+- Basic definitions including free/bound variables, term interpretations and formula realization in a model, semantic implication and equivalence, substitution in terms and formulae, etc.
 - Conversion to prenex form and skollemization of formulae
 - Propositional logic
 - Canonical models
@@ -16,13 +16,13 @@ Some key types and definitions in this library, all available as idomatic Rocq o
 - Resolution (with a lot of variants)
 - Given clause algorithm (two variants)
 - Provability in equational logic
-- First order term rewriting
+- First-order term rewriting
 - Lexicographic path ordering
 
 The available theorems include:
 - A lot of properties of each definition, as correctness-checking is one of the main goal of the library
 - Upward Löwenheim-Skolem (thm_MODEL_DUPLICATE)
-- Downard Löwenheim-Skolem* (thm_LS, thm_COMPACT_LS_NORM)
+- Downward Löwenheim-Skolem* (thm_LS, thm_COMPACT_LS_NORM)
 - Compactness* (thm_COMPACT_PROP, thm_COMPACT_LS, thm_COMPACT_LS_NORM)
 - Uniformity/Skolem-Gödel-Herbrand (thm_UNIFORMITY)
 - Herbrand (thm_HERBRAND_THEOREM)
