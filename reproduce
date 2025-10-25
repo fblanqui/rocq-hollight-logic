@@ -19,7 +19,7 @@ dump_simp_option=
 lpfile=mappings.lp
 vfiles=mappings.v
 mkfile=
-require='Stdlib.NArith.BinNat Stdlib.Reals.Reals mathcomp.classical.classical_sets mathcomp.classical.cardinality mathcomp.ssreflect.choice mathcomp.ssreflect.ssrbool MathComp_HOLLight_Real_With_N.mappings HOLLight_Logic_fole'
+require='Stdlib.NArith.BinNat Stdlib.Reals.Reals mathcomp.classical.classical_sets mathcomp.classical.cardinality mathcomp.ssreflect.choice mathcomp.ssreflect.ssrbool MathComp_HOLLight_Real_With_N.mappings HOLLight_Logic_Unif.mappings'
 root_path=`awk -F'[":]' '/logpath/{print $3}' opam`
 jobs='-j32'
 
@@ -102,7 +102,6 @@ patch_hollight() {
 dump_proofs() {
     start dump hol-light proofs
     cd hol-light
-    cp ../../$base.ml $hollight_file
     hol2dk dump-simp$dump_simp_option $hollight_file
     cd ..
 }
@@ -149,6 +148,7 @@ create_and_check_opam_library() {
     cd ..
     mkdir -p opam
     cd opam
+    if test -f Makefile; then make $jobs clean; fi
     cp ../../opam ../../Makefile $vfiles $mkfile .
     remove_empty_modules ../output/${base}_terms.v > terms.v
     remove_empty_modules ../output/${base}_opam.v > theorems.v
