@@ -29,6 +29,7 @@ The available theorems include:
 - Completeness of resolution* (thm_RESOLUTION_COMPLETE, thm_LINEAR_RESOLUTION_COMPLETE, thm_SOS_RESOLUTION_COMPLETE, thm_POSRESOLUTION_COMPLETE, thm_SEMRESOLUTION_COMPLETE, thm_GBACKCHAIN_MINIMAL, thm_IBACKCHAIN_MINIMAL)
 - Birkhoff's theorem (thm_EQLOGIC_COMPLETE, thm_EQLOGIC_SOUND)
 - Well-foundedness of the lexicographic path ordering over a finite signature (thm_LPO_WF)
+
 (*) Compactness in propositionnal logic, LS+Compactness in regular FOL and in FOL with equality (over normal structures), completeness of each variant of resolution.
 
 
