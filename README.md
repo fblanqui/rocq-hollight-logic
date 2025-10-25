@@ -45,5 +45,3 @@ opam install rocq-hollight-logic
 ```
 Require Import HOLLight_Logic.theorems.
 ```
-
-**
