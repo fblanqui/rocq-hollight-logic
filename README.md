@@ -6,10 +6,10 @@ Remark: The translated theorems are provided as axioms in order to have a fast R
 
 For an overview of the goals and contents of this library, one can read the files [README](https://github.com/jrh13/hol-light/blob/master/Logic/README) and [make.ml](https://github.com/jrh13/hol-light/blob/master/Logic/make.ml) in the [Logic](https://github.com/jrh13/hol-light/blob/master/Logic) library. More precisions are available in John Harrison's publications detailed in the README, as well as in the structure of each file (thanks to proper section naming).
 
-Some key types and definitions in this library, all available as idomatic Rocq objects (note that some are defined in the [rocq-hollight-logic-unif](https://github.com/Deducteam/rocq-hollight-logic-unif) library):
+Some key types and definitions in this library, all available as idiomatic Rocq objects (note that some are defined in the [rocq-hollight-logic-unif](https://github.com/Deducteam/rocq-hollight-logic-unif) library):
 - Inductive types for first-order terms and formulae over a fixed countable signature (functions and predicates labelled by N for all possible arities) or subsets of this signature
 - Basic definitions including free/bound variables, term interpretations and formula realization in a model, semantic implication and equivalence, substitution in terms and formulae, etc.
-- Conversion to prenex form and skollemization of formulae
+- Conversion to prenex form and skolemization of formulae
 - Propositional logic
 - Canonical models
 - Unification algorithm
@@ -30,7 +30,7 @@ The available theorems include:
 - Birkhoff's theorem (thm_EQLOGIC_COMPLETE, thm_EQLOGIC_SOUND)
 - Well-foundedness of the lexicographic path ordering over a finite signature (thm_LPO_WF)
 
-(*) Compactness in propositionnal logic, LS+Compactness in regular FOL and in FOL with equality (over normal structures), completeness of each variant of resolution.
+(*) Compactness in propositional logic, LS+Compactness in regular FOL and in FOL with equality (over normal structures), completeness of each variant of resolution.
 
 
 **Installation using [opam](https://opam.ocaml.org/)**
